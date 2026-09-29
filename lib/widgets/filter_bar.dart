@@ -5,7 +5,9 @@ import '../providers/expense_provider.dart';
 import '../utils/categories.dart';
 
 class FilterBar extends StatelessWidget {
-  const FilterBar({super.key});
+  final VoidCallback? onClear;
+
+  const FilterBar({super.key, this.onClear});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,7 @@ class FilterBar extends StatelessWidget {
           _FilterChip(
             icon: Icons.date_range_outlined,
             label: provider.dateRangeFilter == null
-                ? 'Date range'
+                ? 'Choose dates'
                 : '${dateFmt.format(provider.dateRangeFilter!.start)} - '
                     '${dateFmt.format(provider.dateRangeFilter!.end)}',
             active: provider.dateRangeFilter != null,
@@ -40,7 +42,7 @@ class FilterBar extends StatelessWidget {
             ActionChip(
               avatar: const Icon(Icons.clear, size: 16),
               label: const Text('Clear'),
-              onPressed: provider.clearFilters,
+              onPressed: onClear ?? provider.clearFilters,
             ),
           ],
         ],

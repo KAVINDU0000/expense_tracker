@@ -56,6 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   decoration: const InputDecoration(
                     hintText: 'Search expenses…',
                     border: InputBorder.none,
+                    filled: false,
                   ),
                   onChanged: expenseProvider.setSearchQuery,
                 )
@@ -64,6 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const CurrencySelector(),
             IconButton(
               icon: Icon(_showSearch ? Icons.close : Icons.search),
+              tooltip: _showSearch ? 'Clear search' : 'Search expenses',
               onPressed: () {
                 setState(() {
                   _showSearch = !_showSearch;
@@ -101,8 +103,24 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: TabBarView(
           children: [
-            _ExpensesTab(expenseProvider: expenseProvider),
-            _SummaryTab(expenseProvider: expenseProvider),
+            Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 1040),
+                child: _ExpensesTab(
+                  expenseProvider: expenseProvider,
+                  onClearFilters: () {
+                    _searchController.clear();
+                    expenseProvider.clearFilters();
+                  },
+                ),
+              ),
+            ),
+            Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 1040),
+                child: _SummaryTab(expenseProvider: expenseProvider),
+              ),
+            ),
           ],
         ),
         floatingActionButton: FloatingActionButton.extended(
@@ -120,7 +138,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
 class _ExpensesTab extends StatelessWidget {
   final ExpenseProvider expenseProvider;
-  const _ExpensesTab({required this.expenseProvider});
+  final VoidCallback onClearFilters;
+
+  const _ExpensesTab({
+    required this.expenseProvider,
+    required this.onClearFilters,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +151,7 @@ class _ExpensesTab extends StatelessWidget {
       children: [
         SummaryCard(monthTotal: expenseProvider.currentMonthTotal),
         const SizedBox(height: 8),
-        const FilterBar(),
+        FilterBar(onClear: onClearFilters),
         const SizedBox(height: 4),
         Expanded(child: _buildBody(context)),
       ],
@@ -195,7 +218,8 @@ class _SummaryTab extends StatelessWidget {
         children: [
           SummaryCard(monthTotal: expenseProvider.currentMonthTotal),
           const SizedBox(height: 16),
-          ExpenseChart(categoryTotals: expenseProvider.currentMonthCategoryTotals),
+          ExpenseChart(
+              categoryTotals: expenseProvider.currentMonthCategoryTotals),
         ],
       ),
     );

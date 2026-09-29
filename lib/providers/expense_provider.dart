@@ -57,20 +57,29 @@ class ExpenseProvider extends ChangeNotifier {
   }
 
   Future<void> deleteViaService(Expense expense) async {
-    if (expense.id == null) return;
-    await _service?.deleteExpense(expense.id!);
+    final service = _service;
+    if (service == null) {
+      throw StateError('Expense service is not connected to a user.');
+    }
+    final id = expense.id;
+    if (id == null) {
+      throw StateError('Cannot delete an expense without an id.');
+    }
+    await service.deleteExpense(id);
   }
 
   // ---- Filtering ----
 
   List<Expense> get filteredExpenses {
+    final range = dateRangeFilter;
     return _allExpenses.where((e) {
-      final matchesCategory =
-          categoryFilter == kAllCategoriesFilter || e.category == categoryFilter;
-      final matchesDate = dateRangeFilter == null ||
-          (!e.date.isBefore(dateRangeFilter!.start) &&
-              !e.date.isAfter(
-                  dateRangeFilter!.end.add(const Duration(hours: 23, minutes: 59))));
+      final matchesCategory = categoryFilter == kAllCategoriesFilter ||
+          e.category == categoryFilter;
+      final matchesDate = range == null ||
+          (!e.date.isBefore(range.start) &&
+              e.date.isBefore(
+                DateTime(range.end.year, range.end.month, range.end.day + 1),
+              ));
       final matchesSearch = searchQuery.isEmpty ||
           e.title.toLowerCase().contains(searchQuery.toLowerCase()) ||
           e.note.toLowerCase().contains(searchQuery.toLowerCase());

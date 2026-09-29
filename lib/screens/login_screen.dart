@@ -379,17 +379,18 @@ class _WelcomePanel extends StatelessWidget {
   const _WelcomePanel();
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Container(
       padding: const EdgeInsets.all(40),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFF202A62), Color(0xFF4D5CB0)]),
+            colors: [Color(0xFF17483D), Color(0xFF357B61)]),
         borderRadius: BorderRadius.circular(32),
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const Icon(Icons.insights_rounded, size: 44, color: Color(0xFFC4CDFF)),
+        const Icon(Icons.insights_rounded, size: 44, color: Color(0xFFBCE2C8)),
         const SizedBox(height: 56),
         const Text('Small expenses.\nA clearer picture.',
             style: TextStyle(
@@ -401,7 +402,7 @@ class _WelcomePanel extends StatelessWidget {
         const SizedBox(height: 20),
         const Text('Make sense of your everyday spending, one entry at a time.',
             style:
-                TextStyle(color: Color(0xFFDBE0FF), fontSize: 16, height: 1.7)),
+                TextStyle(color: Color(0xFFE0F0E5), fontSize: 16, height: 1.7)),
         const SizedBox(height: 40),
         for (final feature in [
           (Icons.receipt_long_outlined, 'Every expense, organized'),
@@ -411,11 +412,11 @@ class _WelcomePanel extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(bottom: 20),
             child: Row(children: [
-              Icon(feature.$1, color: const Color(0xFFC4CDFF), size: 22),
+              Icon(feature.$1, color: const Color(0xFFBCE2C8), size: 22),
               const SizedBox(width: 14),
               Expanded(
                   child: Text(feature.$2,
-                      style: const TextStyle(color: Colors.white, height: 1.5)))
+                      style: TextStyle(color: colors.onPrimary, height: 1.5)))
             ]),
           ),
       ]),
