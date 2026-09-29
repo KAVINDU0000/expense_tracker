@@ -51,42 +51,40 @@ test or swap the backend later.
 
 ## Setup Instructions
 
-This repo ships the app's `lib/` source and `pubspec.yaml` only (no platform
-folders), so you need to generate those locally and connect your own Firebase
-project:
+The repository includes the Flutter platform folders, so no project generation
+step is needed.
 
-1. **Create the Flutter shell** (if you cloned just the source):
-   ```bash
-   flutter create --org com.example expense_tracker_shell
-   # then copy this repo's lib/, pubspec.yaml, analysis_options.yaml
-   # into the generated project, overwriting the defaults
-   ```
-   *(Skip this step if the repo already includes `android/`, `ios/`, etc.)*
-
-2. **Install dependencies**
+1. **Install dependencies**
    ```bash
    flutter pub get
    ```
 
-3. **Create a Firebase project** at [console.firebase.google.com](https://console.firebase.google.com), then enable:
+2. **Configure Firebase.** This checkout includes Android and web Firebase
+   options in `lib/firebase_options.dart` and Android's
+   `android/app/google-services.json`. To use your own Firebase project, create
+   it at [console.firebase.google.com](https://console.firebase.google.com),
+   enable the following providers, then run the FlutterFire CLI to generate
+   project-specific options and replace the Android `google-services.json`:
    - **Authentication** → Email/Password provider, and Anonymous provider
    - **Firestore Database** (start in production mode)
-
-4. **Connect the app to Firebase** using the FlutterFire CLI (this generates a real `lib/firebase_options.dart`, replacing the placeholder in this repo):
    ```bash
    dart pub global activate flutterfire_cli
    flutterfire configure
    ```
 
-5. **Deploy Firestore rules** (included as `firestore.rules`) so users can only read/write their own expenses:
+3. **Deploy Firestore rules** (included as `firestore.rules`) so users can only
+   read and write their own expenses:
    ```bash
    firebase deploy --only firestore:rules
    ```
 
-6. **Run the app**
+4. **Run the app** or build a release APK:
    ```bash
    flutter run
+   flutter build apk --release
    ```
+   The APK is written to
+   `build/app/outputs/flutter-apk/app-release.apk`.
 
 ## Data Model
 
