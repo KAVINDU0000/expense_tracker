@@ -1,0 +1,122 @@
+# Expense Tracker (Flutter + Firebase)
+
+A simple, clean expense tracker app built with Flutter and Firebase, made as a
+practical task submission.
+
+## Features Implemented
+
+**Core**
+- Add, edit, and delete expenses (swipe-to-delete with confirmation)
+- Category selection (Food, Transport, Shopping, Bills, Entertainment, Health, Education, Other)
+- Data stored per-user in Cloud Firestore
+- Current month's total spend shown on a summary card
+- Full expense history list, newest first
+- Filter by category and by date range
+- Form validation (required title, positive numeric amount)
+- Proper loading / empty / error states throughout
+
+**Extras**
+- Firebase Authentication (email/password sign up & sign in, plus a "Continue as guest" anonymous option)
+- Search expenses by title/note
+- Monthly category breakdown as a pie chart (Summary tab)
+- Dark mode toggle (persisted locally with `shared_preferences`)
+
+## Tech Stack
+
+| Purpose            | Package |
+|--------------------|---------|
+| State management   | `provider` |
+| Backend / database  | `firebase_core`, `cloud_firestore` |
+| Auth                | `firebase_auth` |
+| Charts              | `fl_chart` |
+| Date/number format  | `intl` |
+| Local prefs         | `shared_preferences` |
+
+## Project Structure
+
+```
+lib/
+  models/         # Expense data model
+  services/       # AuthService, FirestoreService (talk to Firebase)
+  providers/      # ChangeNotifier state: auth, expenses, theme
+  screens/        # Login, Home (list + summary tabs), Add/Edit form
+  widgets/        # Reusable UI: list item, filter bar, chart, states
+  utils/          # Categories, theme, constants
+```
+
+The app follows a simple layered structure: **screens** consume **providers**,
+providers call **services**, and services are the only layer that talks to
+Firebase. This keeps UI code free of Firestore/Auth calls and makes it easy to
+test or swap the backend later.
+
+## Setup Instructions
+
+This repo ships the app's `lib/` source and `pubspec.yaml` only (no platform
+folders), so you need to generate those locally and connect your own Firebase
+project:
+
+1. **Create the Flutter shell** (if you cloned just the source):
+   ```bash
+   flutter create --org com.example expense_tracker_shell
+   # then copy this repo's lib/, pubspec.yaml, analysis_options.yaml
+   # into the generated project, overwriting the defaults
+   ```
+   *(Skip this step if the repo already includes `android/`, `ios/`, etc.)*
+
+2. **Install dependencies**
+   ```bash
+   flutter pub get
+   ```
+
+3. **Create a Firebase project** at [console.firebase.google.com](https://console.firebase.google.com), then enable:
+   - **Authentication** → Email/Password provider, and Anonymous provider
+   - **Firestore Database** (start in production mode)
+
+4. **Connect the app to Firebase** using the FlutterFire CLI (this generates a real `lib/firebase_options.dart`, replacing the placeholder in this repo):
+   ```bash
+   dart pub global activate flutterfire_cli
+   flutterfire configure
+   ```
+
+5. **Deploy Firestore rules** (included as `firestore.rules`) so users can only read/write their own expenses:
+   ```bash
+   firebase deploy --only firestore:rules
+   ```
+
+6. **Run the app**
+   ```bash
+   flutter run
+   ```
+
+## Data Model
+
+Each expense document lives at `users/{uid}/expenses/{expenseId}`:
+
+```json
+{
+  "title": "Groceries",
+  "amount": 42.50,
+  "category": "Food",
+  "date": Timestamp,
+  "note": "Weekly shop",
+  "createdAt": Timestamp
+}
+```
+
+## AI Tools Used
+
+I used **Claude** (Anthropic) during development to:
+- Scaffold the initial project architecture (models/services/providers/screens/widgets split)
+- Generate boilerplate for Firebase Auth/Firestore service wrappers and the Provider-based state management
+- Draft the UI widgets (filter bar, chart, list item, form validation logic)
+- Write this README
+
+I reviewed, tested, and adjusted the generated code myself, and can explain,
+modify, or debug any part of it.
+
+## Possible Future Improvements
+
+- Pagination for very large expense histories
+- Recurring expenses
+- Export to CSV
+- Budget limits with notifications

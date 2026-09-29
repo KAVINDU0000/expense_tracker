@@ -1,0 +1,17 @@
+{
+  "firestore": {
+    "rules": "firestore.rules"
+  },
+  "flutter": {
+    "platforms": {
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "newproject-476f2",
+          "configurations": {
+            "web": "1:132351085315:web:fc2142bbabd6f6901d3736"
+          }
+        }
+      }
+    }
+  }
+}
