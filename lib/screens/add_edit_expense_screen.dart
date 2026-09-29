@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../models/expense.dart';
 import '../providers/expense_provider.dart';
+import '../providers/currency_provider.dart';
 import '../utils/categories.dart';
 
 class AddEditExpenseScreen extends StatefulWidget {
@@ -117,9 +118,10 @@ class _AddEditExpenseScreenState extends State<AddEditExpenseScreen> {
                   controller: _amountController,
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: true),
-                  decoration: const InputDecoration(
-                      labelText: 'Amount',
-                      prefixIcon: Icon(Icons.attach_money)),
+                  decoration: InputDecoration(
+                      labelText:
+                          'Amount (${context.watch<CurrencyProvider>().code})',
+                      prefixIcon: const Icon(Icons.payments_outlined)),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return 'Please enter an amount';
@@ -174,8 +176,8 @@ class _AddEditExpenseScreenState extends State<AddEditExpenseScreen> {
                 const SizedBox(height: 24),
                 FilledButton(
                   onPressed: _isSaving ? null : _save,
-                  style:
-                      FilledButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 14)),
+                  style: FilledButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 14)),
                   child: _isSaving
                       ? const SizedBox(
                           height: 18,

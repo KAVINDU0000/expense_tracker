@@ -8,6 +8,7 @@ import '../widgets/expense_list_item.dart';
 import '../widgets/filter_bar.dart';
 import '../widgets/state_views.dart';
 import '../widgets/summary_card.dart';
+import '../widgets/currency_selector.dart';
 import 'add_edit_expense_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -60,6 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 )
               : const Text('Expense Tracker'),
           actions: [
+            const CurrencySelector(),
             IconButton(
               icon: Icon(_showSearch ? Icons.close : Icons.search),
               onPressed: () {

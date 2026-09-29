@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import '../providers/currency_provider.dart';
 import '../utils/categories.dart';
 
 class ExpenseChart extends StatelessWidget {
@@ -19,7 +20,7 @@ class ExpenseChart extends StatelessWidget {
     final total = categoryTotals.values.fold(0.0, (a, b) => a + b);
     final entries = categoryTotals.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
-    final currency = NumberFormat.currency(symbol: '\$');
+    final currency = context.watch<CurrencyProvider>().formatter;
 
     return Column(
       children: [

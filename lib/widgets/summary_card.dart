@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import '../providers/currency_provider.dart';
 
 class SummaryCard extends StatelessWidget {
   final double monthTotal;
@@ -8,7 +10,7 @@ class SummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final monthLabel = DateFormat.MMMM().format(DateTime.now());
-    final currency = NumberFormat.currency(symbol: '\$');
+    final currency = context.watch<CurrencyProvider>().formatter;
     final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
@@ -16,7 +18,7 @@ class SummaryCard extends StatelessWidget {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [colorScheme.primary, colorScheme.primary.withOpacity(0.75)],
+          colors: [colorScheme.primary, colorScheme.primary.withValues(alpha: 0.75)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),

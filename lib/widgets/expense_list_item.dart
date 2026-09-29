@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import '../providers/currency_provider.dart';
 import '../models/expense.dart';
 import '../utils/categories.dart';
 
@@ -18,7 +20,7 @@ class ExpenseListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final category = categoryFromName(expense.category);
-    final currency = NumberFormat.currency(symbol: '\$');
+    final currency = context.watch<CurrencyProvider>().formatter;
 
     return Dismissible(
       key: ValueKey(expense.id),
@@ -61,7 +63,7 @@ class ExpenseListItem extends StatelessWidget {
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           leading: CircleAvatar(
-            backgroundColor: category.color.withOpacity(0.15),
+            backgroundColor: category.color.withValues(alpha: 0.15),
             child: Icon(category.icon, color: category.color),
           ),
           title: Text(expense.title,
